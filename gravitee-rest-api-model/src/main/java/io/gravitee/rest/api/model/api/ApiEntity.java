@@ -19,10 +19,8 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.gravitee.common.component.Lifecycle;
-import io.gravitee.definition.model.Path;
+import io.gravitee.definition.model.*;
 import io.gravitee.definition.model.Properties;
-import io.gravitee.definition.model.Proxy;
-import io.gravitee.definition.model.ResponseTemplates;
 import io.gravitee.definition.model.plugins.resources.Resource;
 import io.gravitee.definition.model.services.Services;
 import io.gravitee.rest.api.model.*;
@@ -92,6 +90,21 @@ public class ApiEntity implements Indexable, FilterableItem {
     @ApiModelProperty(
             value = "a map where you can associate a path to a configuration (the policies configuration)")
     private Map<String, Path> paths = new HashMap<>();
+
+    @JsonProperty(value = "flows", required = true)
+    @ApiModelProperty(
+        value = "a list of flows (the policies configuration)")
+    private List<Flow> flows = new ArrayList<>();
+
+    @JsonProperty(value = "plans", required = true)
+    @ApiModelProperty(
+        value = "a list of plans with flows (the policies configuration)")
+    private List<Plan> plans = new ArrayList<>();
+
+    @JsonProperty(value = "gravitee", required = false)
+    @ApiModelProperty(
+        value = "API's gravitee definition version")
+    private String graviteeDefinitionVersion;
 
     @JsonProperty("deployed_at")
     @ApiModelProperty(
@@ -461,6 +474,30 @@ public class ApiEntity implements Indexable, FilterableItem {
         this.backgroundUrl = backgroundUrl;
     }
 
+    public List<Flow> getFlows() {
+        return flows;
+    }
+
+    public void setFlows(List<Flow> flows) {
+        this.flows = flows;
+    }
+
+    public List<Plan> getPlans() {
+        return plans;
+    }
+
+    public void setPlans(List<Plan> plans) {
+        this.plans = plans;
+    }
+
+    public String getGraviteeDefinitionVersion() {
+        return graviteeDefinitionVersion;
+    }
+
+    public void setGraviteeDefinitionVersion(String graviteeDefinitionVersion) {
+        this.graviteeDefinitionVersion = graviteeDefinitionVersion;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -495,6 +532,7 @@ public class ApiEntity implements Indexable, FilterableItem {
                 ", lifecycleState=" + lifecycleState +
                 ", workflowState=" + workflowState +
                 ", disableMembershipNotifications=" + disableMembershipNotifications +
+                ", graviteeDefinitionVersion=" + graviteeDefinitionVersion +
                 '}';
     }
 }

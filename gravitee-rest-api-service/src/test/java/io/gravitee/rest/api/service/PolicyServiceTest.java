@@ -16,13 +16,17 @@
 package io.gravitee.rest.api.service;
 
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import io.gravitee.definition.model.Api;
 import io.gravitee.definition.model.Policy;
+import io.gravitee.gateway.api.Request;
+import io.gravitee.gateway.api.Response;
 import io.gravitee.plugin.core.api.ConfigurablePluginManager;
 import io.gravitee.plugin.core.api.PluginManifest;
 import io.gravitee.plugin.policy.PolicyPlugin;
+import io.gravitee.policy.api.PolicyChain;
+import io.gravitee.policy.api.annotations.OnRequest;
 import io.gravitee.repository.exceptions.TechnicalException;
 import io.gravitee.rest.api.model.PolicyEntity;
-import io.gravitee.rest.api.service.PolicyService;
 import io.gravitee.rest.api.service.exceptions.InvalidDataException;
 import io.gravitee.rest.api.service.impl.PolicyServiceImpl;
 
@@ -32,17 +36,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.reflections.ReflectionUtils;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -84,11 +87,22 @@ public class PolicyServiceTest {
     private JsonSchemaFactory jsonSchemaFactory = new ServiceConfiguration().jsonSchemaFactory();
 
 
+    class PolicyMock {
+
+        @OnRequest
+        public void onRequest() {
+        }
+
+    }
+
     @Before
     public void before() {
 
         // Manually set the jsonSchemaFactory.
         ReflectionTestUtils.setField(policyService, "jsonSchemaFactory", jsonSchemaFactory);
+        when(policyDefinition.path()).thenReturn(mock(Path.class));
+        when(policyDefinition.type()).thenReturn("");
+        when(policyDefinition.policy()).thenReturn(PolicyMock.class);
     }
 
 //    @Mock

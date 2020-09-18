@@ -18,6 +18,7 @@ package io.gravitee.rest.api.service.jackson.ser.api;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import io.gravitee.definition.model.Flow;
 import io.gravitee.definition.model.Path;
 import io.gravitee.definition.model.plugins.resources.Resource;
 import io.gravitee.rest.api.model.*;
@@ -26,7 +27,6 @@ import io.gravitee.rest.api.model.documentation.PageQuery;
 import io.gravitee.rest.api.service.*;
 import org.springframework.context.ApplicationContext;
 
-import javax.print.attribute.standard.Media;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -59,6 +59,7 @@ public abstract class ApiSerializer extends StdSerializer<ApiEntity> {
     @Override
     public void serialize(ApiEntity apiEntity, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
+
         if (apiEntity.getName() != null) {
             jsonGenerator.writeObjectField("name", apiEntity.getName());
         }
@@ -87,6 +88,14 @@ public abstract class ApiSerializer extends StdSerializer<ApiEntity> {
                 jsonGenerator.writeObjectField(entry.getKey(), entry.getValue());
             }
             jsonGenerator.writeEndObject();
+        }
+
+        if (apiEntity.getGraviteeDefinitionVersion() != null) {
+            jsonGenerator.writeObjectField("gravitee", apiEntity.getGraviteeDefinitionVersion());
+        }
+
+        if (apiEntity.getFlows() != null) {
+            jsonGenerator.writeObjectField("flows", apiEntity.getFlows());
         }
 
         if (apiEntity.getServices() != null && !apiEntity.getServices().isEmpty()) {
