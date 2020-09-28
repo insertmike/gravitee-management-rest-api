@@ -15,7 +15,7 @@
  */
 package io.gravitee.rest.api.service.impl.swagger.converter.api;
 
-import io.gravitee.rest.api.model.api.SwaggerApiEntity;
+import io.gravitee.rest.api.model.api.UpdateApiEntity;
 import io.gravitee.rest.api.service.impl.swagger.converter.SwaggerConverter;
 import io.gravitee.rest.api.service.swagger.SwaggerDescriptor;
 
@@ -23,7 +23,8 @@ import io.gravitee.rest.api.service.swagger.SwaggerDescriptor;
  * @author David BRASSELY (david.brassely at graviteesource.com)
  * @author GraviteeSource Team
  */
-public interface SwaggerToApiConverter<S extends SwaggerDescriptor> extends SwaggerConverter<S, SwaggerApiEntity> {
+public interface SwaggerToApiConverter<S extends SwaggerDescriptor> extends SwaggerConverter<S, UpdateApiEntity> {
 
-    SwaggerApiEntity convert(S descriptor);
+    @Override
+    UpdateApiEntity convert(S descriptor);
 }
