@@ -81,20 +81,18 @@ public class EmailNotifierServiceImpl implements EmailNotifierService {
         String[] mails = genericNotificationConfig.getConfig().split(",|;|\\s");
         List<String> result = new ArrayList<>();
         for (String mail : mails) {
-            if(!mail.isEmpty()) {
-                if(mail.contains("$")) {
+            if (!mail.isEmpty()) {
+                if (mail.contains("$")) {
                     try {
                         final Template template = new Template(mail, mail, freemarkerConfiguration);
                         String tmpMail = FreeMarkerTemplateUtils.processTemplateIntoString(template, params);
-                        if(!tmpMail.isEmpty()) {
-                            mail = tmpMail;
+                        if (!tmpMail.isEmpty()) {
+                            result.add(tmpMail);
                         }
                     } catch (IOException | TemplateException e) {
-                        LOGGER.debug("Email recipient cannot be interpreted {}", mail, e);
-                        continue;
+                        LOGGER.error("Email recipient cannot be interpreted {}", mail, e);
                     }
                 }
-                result.add(mail);
             }
         }
         return result;
